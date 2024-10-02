@@ -23,16 +23,6 @@ export default function QuizPage({ quizId, quiz }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
 
-  // const handleNextQuestion = () => {
-  //   submitAnswer(selectedAnswer);
-  //   // setScore(score + 1);
-  //   if (currentQuestionIndex < quiz.questions.length - 1) {
-  //     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-  //   } else {
-  //     router.push('/categories');
-  //   }
-  // };
-
   const handleNextQuestion = () => {
     submitAnswer(selectedAnswer);
 
