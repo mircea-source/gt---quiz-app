@@ -3,19 +3,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { quizData } from '../../data';
 import Question from '../../components/Question';
-import localFont from "next/font/local";
 import styles from '@/styles/Quiz.module.css';
-
-const geistSans = localFont({
-  src: "../fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "../fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export default function QuizPage({ quizId, quiz }) {
   const router = useRouter();
@@ -37,7 +25,6 @@ export default function QuizPage({ quizId, quiz }) {
 
     } else {
       router.push('/categories');
-      alert(`Ai obținut ${score} puncte din ${quiz.questions.length - 1} posibile.`);
     }
   };
 
@@ -53,7 +40,7 @@ export default function QuizPage({ quizId, quiz }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div
-        className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}
+        className={styles.page}
       >
         <main className={styles.main}>
           <div>
@@ -62,6 +49,8 @@ export default function QuizPage({ quizId, quiz }) {
               question={quiz.questions[currentQuestionIndex]}
               onAnswerSelection={setSelectedAnswer}
             />
+            <hr className={styles.primary} />
+            <p>Punctaj: <strong>{score}</strong> din {quiz.questions.length - 1} puncte posibile.</p>
             <div className={styles.ctas}>
               <button onClick={handleNextQuestion} className={styles.primary}>Înainte →</button>
             </div>

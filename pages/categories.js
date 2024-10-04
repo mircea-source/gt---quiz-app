@@ -1,18 +1,6 @@
 import Head from "next/head";
 import Link from 'next/link';
-import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export default function Categories() {
     return (
@@ -23,7 +11,7 @@ export default function Categories() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div
-        className={`${styles.page} ${geistSans.variable} ${geistMono.variable}`}
+        className={styles.page}
       >
         <main className={styles.main}>
           <h1>Alege o categorie</h1>

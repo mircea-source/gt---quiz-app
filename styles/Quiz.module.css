@@ -108,6 +108,11 @@
   font-weight: 500;
 }
 
+hr.primary {
+  margin: 12px 0;
+  color: #e2e2e2;
+}
+
 button.primary {
   background: var(--foreground);
   color: var(--background);
