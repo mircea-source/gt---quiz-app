@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { quizData } from '../../data';
 import Question from '../../components/Question';
 import styles from '@/styles/Quiz.module.css';
 
@@ -61,13 +60,22 @@ export default function QuizPage({ quizId, quiz }) {
   );
 }
 
+import path from 'path';
+import fs from 'fs';
+
 export async function getStaticPaths() {
-  const quizIds = Object.keys(quizData);
+  const filePath = path.join(process.cwd(), 'public', 'questions.json');
+  const jsonData = fs.readFileSync(filePath, 'utf-8');
+  const data = JSON.parse(jsonData);
+  const quizIds = Object.keys(data);
   const paths = quizIds.map((id) => ({ params: { quizId: id } }));
   return { paths, fallback: false };
 }
 
 export async function getStaticProps({ params }) {
-  const quiz = quizData[params.quizId];
+  const filePath = path.join(process.cwd(), 'public', 'questions.json');
+  const jsonData = fs.readFileSync(filePath, 'utf-8');
+  const data = JSON.parse(jsonData);
+  const quiz = data[params.quizId];
   return { props: { quizId: params.quizId, quiz } };
 }

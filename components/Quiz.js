@@ -1,15 +1,24 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { quizData } from '../data';
+import { useState, useEffect } from 'react';
 import Question from './Question';
 
 function QuizPage() {
   const router = useRouter();
   const { quizId } = router.query;
-  const quiz = quizData[quizId];
+  const [setQuizData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch('/questions.json');
+            const data = await response.json();
+            setQuizData(data);
+        };
+        fetchData();
+    }, []);
 
   if (!quiz) {
-    return <div>Niciun chestionar.</div>;
+    return <div>Încărcare chestionar...</div>;
   }
 
   return (
