@@ -4,22 +4,20 @@ import { useState, useEffect } from 'react';
 import Question from './Question';
 
 function QuizPage() {
-  const router = useRouter();
-  const { quizId } = router.query;
-  const [setQuizData] = useState(null);
+  const [questions, setQuizData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch('/questions.json');
-            const data = await response.json();
-            setQuizData(data);
-        };
-        fetchData();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/questions');
+        const data = await response.json();
+        setQuizData(data);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+      fetchData();
     }, []);
-
-  if (!quiz) {
-    return <div>Încărcare chestionar...</div>;
-  }
 
   return (
     <>

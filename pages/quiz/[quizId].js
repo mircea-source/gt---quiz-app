@@ -47,6 +47,7 @@ export default function QuizPage({ quizId, quiz }) {
             <Question
               question={quiz.questions[currentQuestionIndex]}
               onAnswerSelection={setSelectedAnswer}
+              selectedAnswer={selectedAnswer}
             />
             <hr className={styles.primary} />
             <p>Punctaj: <strong>{score}</strong> din {quiz.questions.length - 1} puncte posibile.</p>

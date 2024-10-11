@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Head>
         <title>Chestionar GT</title>
-        <meta name="description" content="Workout 3 - Modulul 7" />
+        <meta name="description" content="Workout - Quiz app 3 - Modulul 9" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div

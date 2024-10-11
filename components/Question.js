@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 
-function Question({ question, onAnswerSelection }) {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  const handleAnswerClick = (answer) => {
-    setSelectedAnswer(answer);
-    onAnswerSelection(answer);
-  };
+function Question({ question, selectedAnswer, onAnswerSelection }) {
 
   return (
     <div>
@@ -14,7 +8,7 @@ function Question({ question, onAnswerSelection }) {
       <div className="category">
         {question.options.map((option) => (
           <p key={option}>
-            <input type="radio" name="answer" value={option} checked={selectedAnswer === option} onChange={() => handleAnswerClick(option)} />
+            <input type="radio" name="answer" value={option} checked={selectedAnswer === option} onChange={() => onAnswerSelection(option)} />
             {option}
           </p>
         ))}
