@@ -1,16 +1,23 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { quizData } from '../data';
+import { useState, useEffect } from 'react';
 import Question from './Question';
 
 function QuizPage() {
-  const router = useRouter();
-  const { quizId } = router.query;
-  const quiz = quizData[quizId];
+  const [questions, setQuizData] = useState([]);
 
-  if (!quiz) {
-    return <div>Niciun chestionar.</div>;
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/questions');
+        const data = await response.json();
+        setQuizData(data);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+      fetchData();
+    }, []);
 
   return (
     <>

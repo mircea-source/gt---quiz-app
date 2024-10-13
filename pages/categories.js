@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import Head from "next/head";
 import Link from 'next/link';
 import styles from "@/styles/Home.module.css";
 
-export default function Categories() {
-    return (
-      <>
+import AddQuestionForm from '../components/AddQuestionForm';
+
+function Categories() {
+  // const categories = Object.keys(questionsData);
+  return (
+    <>
       <Head>
         <title>Chestionar GT</title>
         <meta name="description" content="Categorii chestionar" />
@@ -20,9 +24,15 @@ export default function Categories() {
             <h3><Link href="/quiz/nextjs">Next.js</Link></h3> ⬤
             <h3><Link href="/quiz/javascript">JavaScript</Link></h3>
           </div>
+
+          <h2>Adaugă o întrebare nouă</h2>
+          <AddQuestionForm />
+
           <h4><Link href="/">← Înapoi la prima pagină</Link></h4>
         </main>
       </div>
-      </>
-    );
-  }
+    </>
+  );
+}
+
+export default Categories;
