@@ -49,8 +49,9 @@
   margin-bottom: 8px;
 }
 
-.main p {
-  padding: 5px 0;
+.main p,
+.main label {
+  padding: 8px 0;
 }
 
 .main code {

@@ -13,10 +13,10 @@ function Question({ question, onAnswerSelection }) {
       <p>{question.question}</p>
       <div className="category">
         {question.options.map((option) => (
-          <p key={option}>
+          <label key={option} style={{ display: 'block' }}>
             <input type="radio" name="answer" value={option} checked={selectedAnswer === option} onChange={() => handleAnswerClick(option)} />
             {option}
-          </p>
+          </label>
         ))}
       </div>
     </div>
