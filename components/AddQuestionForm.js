@@ -1,46 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function AddQuestionForm() {
-    const categories = ['restapi', 'nextjs', 'javascript'];
-
-    const [newQuestion, setNewQuestion] = useState({
-        question: '',
-        options: ['', '', ''],
-        correctAnswer: ''
+function AddQuestionForm({ categories }) {
+    const [questions, setQuestions] = useState(() => {
+        const storedQuestions = localStorage.getItem('questions');
+        return storedQuestions ? JSON.parse(storedQuestions) : [];
     });
+
+    const [newQuestionText, setNewQuestionText] = useState('');
+    const [newQuestionOptions, setNewQuestionOptions] = useState(['', '', '']);
+    const [newQuestionAnswer, setNewQuestionAnswer] = useState('');
 
     const handleChange = (event) => {
         const { name, value } = event.target;
 
         if (name === 'options') {
             const index = parseInt(event.target.dataset.index);
-            const updatedOptions = [...newQuestion.options];
+            const updatedOptions = [...newQuestionOptions];
             updatedOptions[index] = value;
-            setNewQuestion({ ...newQuestion, options: updatedOptions });
+            setNewQuestionOptions(updatedOptions);
         } else {
-            setNewQuestion({ ...newQuestion, [name]: value });
+            if (name === 'question') {
+                setNewQuestionText(value);
+            } else if (name === 'correctAnswer') {
+                setNewQuestionAnswer(value);
+            }
         }
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        const newQuestionData = {
+            question: newQuestionText,
+            options: newQuestionOptions,
+            correctAnswer: newQuestionAnswer
+        };
+
         const updatedQuestions = [...questions];
-        updatedQuestions.push(newQuestion);
+        updatedQuestions.push(newQuestionData);
+
+        setQuestions(updatedQuestions);
+        localStorage.setItem('questions', JSON.stringify(updatedQuestions));
 
         // Reset form
-        setNewQuestion({
-            question: '',
-            options: ['', '', ''],
-            correctAnswer: ''
-        });
+        setNewQuestionText('');
+        setNewQuestionOptions(['', '', '']);
+        setNewQuestionAnswer('');
     };
+
+    useEffect(() => {
+        localStorage.setItem('questions', JSON.stringify(questions));
+    }, [questions]);
 
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                Categoria:
-                <select name="category" value={newQuestion.category} onChange={handleChange} required>
+                Categorie:
+                <select name="category" value={questions.category} onChange={handleChange} required>
                     <option value="">Alege o categorie</option>
                     {categories.map(category => (
                         <option key={category} value={category}>{category}</option>
@@ -52,7 +68,7 @@ function AddQuestionForm() {
                 <input
                     type="text"
                     name="question"
-                    value={newQuestion.question}
+                    value={newQuestionText}
                     onChange={handleChange}
                     required
                 />
@@ -64,7 +80,7 @@ function AddQuestionForm() {
                         type="text"
                         name="options"
                         data-index="0"
-                        value={newQuestion.options[0]}
+                        value={newQuestionOptions[0]}
                         onChange={handleChange}
                         required
                     />
@@ -75,7 +91,7 @@ function AddQuestionForm() {
                         type="text"
                         name="options"
                         data-index="1"
-                        value={newQuestion.options[1]}
+                        value={newQuestionOptions[1]}
                         onChange={handleChange}
                         required
                     />
@@ -86,7 +102,7 @@ function AddQuestionForm() {
                         type="text"
                         name="options"
                         data-index="2"
-                        value={newQuestion.options[2]}
+                        value={newQuestionOptions[2]}
                         onChange={handleChange}
                         required
                     />
@@ -94,7 +110,7 @@ function AddQuestionForm() {
             </div>
             <label>
                 Răspunsul corect:
-                <select name="correctAnswer" value={newQuestion.correctAnswer} onChange={handleChange} required>
+                <select name="correctAnswer" value={newQuestionAnswer} onChange={handleChange} required>
                     <option value="">Selectează răspunsul corect</option>
                     <option value="0">Răspunsul 1</option>
                     <option value="1">Răspunsul 2</option>

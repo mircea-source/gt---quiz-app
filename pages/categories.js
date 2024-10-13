@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import AddQuestionForm from '../components/AddQuestionForm';
 
 function Categories() {
-  // const categories = Object.keys(questionsData);
+  const categories = ['restapi', 'nextjs', 'javascript'];
   return (
     <>
       <Head>
@@ -26,7 +26,7 @@ function Categories() {
           </div>
 
           <h2>Adaugă o întrebare nouă</h2>
-          <AddQuestionForm />
+          <AddQuestionForm categories={categories} />
 
           <h4><Link href="/">← Înapoi la prima pagină</Link></h4>
         </main>
