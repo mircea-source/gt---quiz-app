@@ -1,12 +1,14 @@
-import { useState } from 'react'
 import Head from "next/head";
 import Link from 'next/link';
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Category.module.css";
 
 import AddQuestionForm from '../components/AddQuestionForm';
+import questionsData from '../public/questions.json'; // Adjust the path as necessary
 
 function Categories() {
-  const categories = ['restapi', 'nextjs', 'javascript'];
+  // Extract categories from questionsData
+  const categories = Object.keys(questionsData.category);
+
   return (
     <>
       <Head>
@@ -14,18 +16,20 @@ function Categories() {
         <meta name="description" content="Categorii chestionar" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div
-        className={styles.page}
-      >
+      <div className={styles.page}>
         <main className={styles.main}>
           <h1>Alege o categorie</h1>
           <div className={styles.footer}>
-            <h3><Link href="/quiz/restapi">REST API</Link></h3> ⬤
-            <h3><Link href="/quiz/nextjs">Next.js</Link></h3> ⬤
-            <h3><Link href="/quiz/javascript">JavaScript</Link></h3>
+            {categories.map((category) => (
+              <div className={styles.ctas} key={category}>
+                <Link className={styles.primary} href={`/quiz/${category}`}>{category}</Link>
+              </div>
+            ))}
           </div>
 
-          <h2>Adaugă o întrebare nouă</h2>
+          <hr className={styles.primary} />
+
+          <h2>Adaugă o întrebare suplimentară</h2>
           <AddQuestionForm categories={categories} />
 
           <h4><Link href="/">← Înapoi la prima pagină</Link></h4>

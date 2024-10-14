@@ -1,14 +1,31 @@
 import { useState, useEffect } from 'react';
+import questionsData from '../public/questions.json'; // Adjust the path as necessary
+import styles from '../styles/Category.module.css';
+
 
 function AddQuestionForm({ categories }) {
-    const [questions, setQuestions] = useState(() => {
-        const storedQuestions = localStorage.getItem('questions');
-        return storedQuestions ? JSON.parse(storedQuestions) : [];
-    });
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            // Load questions from JSON file and save to localStorage
+            const allQuestions = [];
+            for (const category in questionsData.category) {
+                if (questionsData.category.hasOwnProperty(category)) {
+                    questionsData.category[category].questions.forEach(question => {
+                        allQuestions.push({ ...question, category });
+                    });
+                }
+            }
+            localStorage.setItem('questions', JSON.stringify(allQuestions));
+            setQuestions(allQuestions);
+        }
+    }, []);
 
     const [newQuestionText, setNewQuestionText] = useState('');
     const [newQuestionOptions, setNewQuestionOptions] = useState(['', '', '']);
     const [newQuestionAnswer, setNewQuestionAnswer] = useState('');
+    const [newQuestionCategory, setNewQuestionCategory] = useState('');
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -18,47 +35,47 @@ function AddQuestionForm({ categories }) {
             const updatedOptions = [...newQuestionOptions];
             updatedOptions[index] = value;
             setNewQuestionOptions(updatedOptions);
-        } else {
-            if (name === 'question') {
-                setNewQuestionText(value);
-            } else if (name === 'correctAnswer') {
-                setNewQuestionAnswer(value);
-            }
+        } else if (name === 'category') {
+            setNewQuestionCategory(value);
+        } else if (name === 'question') {
+            setNewQuestionText(value);
+        } else if (name === 'answer') {
+            setNewQuestionAnswer(value);
         }
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const newQuestionData = {
-            question: newQuestionText,
-            options: newQuestionOptions,
-            correctAnswer: newQuestionAnswer
-        };
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const existingQuestions = JSON.parse(localStorage.getItem('questions')) || [];
 
-        const updatedQuestions = [...questions];
-        updatedQuestions.push(newQuestionData);
+            const newQuestion = {
+                category: newQuestionCategory,
+                question: newQuestionText,
+                options: newQuestionOptions,
+                answer: newQuestionAnswer
+            };
 
-        setQuestions(updatedQuestions);
-        localStorage.setItem('questions', JSON.stringify(updatedQuestions));
+            const updatedQuestions = [...existingQuestions, newQuestion];
+            localStorage.setItem('questions', JSON.stringify(updatedQuestions));
 
-        // Reset form
-        setNewQuestionText('');
-        setNewQuestionOptions(['', '', '']);
-        setNewQuestionAnswer('');
+            setNewQuestionCategory('');
+            setNewQuestionText('');
+            setNewQuestionOptions(['', '', '']);
+            setNewQuestionAnswer('');
+        } else {
+            console.error('localStorage is not available');
+        }
     };
-
-    useEffect(() => {
-        localStorage.setItem('questions', JSON.stringify(questions));
-    }, [questions]);
 
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                Categorie:
-                <select name="category" value={questions.category} onChange={handleChange} required>
+                Categoria:
+                <select name="category" value={newQuestionCategory} onChange={handleChange} required>
                     <option value="">Alege o categorie</option>
-                    {categories.map(category => (
+                    {categories.map((category) => (
                         <option key={category} value={category}>{category}</option>
                     ))}
                 </select>
@@ -68,6 +85,7 @@ function AddQuestionForm({ categories }) {
                 <input
                     type="text"
                     name="question"
+                    className={styles.text}
                     value={newQuestionText}
                     onChange={handleChange}
                     required
@@ -79,6 +97,7 @@ function AddQuestionForm({ categories }) {
                     <input
                         type="text"
                         name="options"
+                        className={styles.text}
                         data-index="0"
                         value={newQuestionOptions[0]}
                         onChange={handleChange}
@@ -90,6 +109,7 @@ function AddQuestionForm({ categories }) {
                     <input
                         type="text"
                         name="options"
+                        className={styles.text}
                         data-index="1"
                         value={newQuestionOptions[1]}
                         onChange={handleChange}
@@ -101,6 +121,7 @@ function AddQuestionForm({ categories }) {
                     <input
                         type="text"
                         name="options"
+                        className={styles.text}
                         data-index="2"
                         value={newQuestionOptions[2]}
                         onChange={handleChange}
@@ -110,14 +131,14 @@ function AddQuestionForm({ categories }) {
             </div>
             <label>
                 Răspunsul corect:
-                <select name="correctAnswer" value={newQuestionAnswer} onChange={handleChange} required>
-                    <option value="">Selectează răspunsul corect</option>
+                <select name="answer" value={newQuestionAnswer} onChange={handleChange} required>
+                    <option value="">Alege răspunsul corect</option>
                     <option value="0">Răspunsul 1</option>
                     <option value="1">Răspunsul 2</option>
                     <option value="2">Răspunsul 3</option>
                 </select>
             </label>
-            <button type="submit">Adaugă întrebarea</button>
+            <button type="submit" className={styles.main} >Adaugă întrebarea</button>
         </form>
     );
 }

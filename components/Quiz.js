@@ -1,29 +1,39 @@
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import Question from './Question';
+import Link from 'next/link';
+import Question from '../../components/Question';
 
 function QuizPage() {
-  const [questions, setQuizData] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/questions');
-        const data = await response.json();
-        setQuizData(data);
+        const apiQuestions = await response.json();
+
+        let localStorageQuestions = [];
+        if (typeof window !== 'undefined' && window.localStorage) {
+          const storedQuestions = localStorage.getItem('questions');
+          if (storedQuestions) {
+            localStorageQuestions = JSON.parse(storedQuestions);
+          }
+        }
+
+        const combinedQuestions = [...apiQuestions, ...localStorageQuestions];
+        setQuestions(combinedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
       }
     };
-      fetchData();
-    }, []);
+
+    fetchData();
+  }, []);
 
   return (
     <>
       <div>
-        <h1>Chestionar {quizId}</h1>
-        {quiz.questions.map((question, index) => (
+        <h1>Chestionar</h1>
+        {questions.map((question, index) => (
           <Question key={index} question={question} />
         ))}
       </div>

@@ -21,7 +21,8 @@ export default function Home() {
             <Link href="/quiz/nextjs">Next.js</Link>,&nbsp;
             <Link href="/quiz/javascript">JavaScript</Link>.
            </p>
-          <p>Există doar o singură variantă corectă de răspuns pentru fiecare întrebare.</p>
+          <p>Există doar o singură variantă corectă de răspuns pentru fiecare întrebare.
+            <br/>Se poate adăuga o întrebare suplimentară, care va fi afișată după încheierea chestionarului.</p>
           <p>Alege o categorie sau începe chestionarul apăsând butonul Start.</p>
 
           <div className={styles.ctas}>
