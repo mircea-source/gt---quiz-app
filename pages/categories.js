@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styles from "@/styles/Category.module.css";
 
 import AddQuestionForm from '../components/AddQuestionForm';
-import questionsData from '../public/questions.json'; // Adjust the path as necessary
+import questionsData from '../public/questions.json';
 
 function Categories() {
   // Extract categories from questionsData

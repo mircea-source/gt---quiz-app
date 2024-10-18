@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import questionsData from '../public/questions.json'; // Adjust the path as necessary
+import { useRouter } from 'next/router';
+import questionsData from '../public/questions.json';
 import styles from '../styles/Category.module.css';
-
 
 function AddQuestionForm({ categories }) {
     const [questions, setQuestions] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.localStorage) {
@@ -64,6 +65,9 @@ function AddQuestionForm({ categories }) {
             setNewQuestionText('');
             setNewQuestionOptions(['', '', '']);
             setNewQuestionAnswer('');
+
+            // Redirect to the quiz page for the selected category
+            router.push(`/quiz/${newQuestionCategory}`);
         } else {
             console.error('localStorage is not available');
         }

@@ -1,50 +1,42 @@
 import Head from "next/head";
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import Question from '../../components/Question';
 import styles from '@/styles/Quiz.module.css';
+import questionsData from '../../public/questions.json';
 
-export default function QuizPage({ quizId, initialQuestions }) {
+export default function Quiz() {
   const router = useRouter();
+  const { quizId } = router.query;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
-  const [quiz, setQuiz] = useState({ questions: initialQuestions });
 
-  useEffect(() => {
-    if (quizId && typeof window !== 'undefined' && window.localStorage) {
-      const storedQuestions = JSON.parse(localStorage.getItem('questions')) || [];
-      const filteredQuestions = storedQuestions.filter(question => question.category === quizId);
-      setQuiz({ questions: filteredQuestions });
-    }
-  }, [quizId]);
+  if (!quizId || !questionsData.category[quizId]) {
+    return <p>Invalid quiz category</p>;
+  }
 
-  const handleNextQuestion = () => {
-    submitAnswer(selectedAnswer);
+  const questions = questionsData.category[quizId].questions;
+  const currentQuestion = questions[currentQuestionIndex];
 
-    if (selectedAnswer === quiz.questions[currentQuestionIndex].correctAnswer) {
+  const handleOptionClick = (option) => {
+    setSelectedAnswer(option);
+    setShowAnswer(true);
+    if (option === currentQuestion.correctAnswer) {
       setScore(score + 1);
     }
+  };
 
-    if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-      setSelectedAnswer(null); // Reset selected answer for the next question
+  const handleNextQuestion = () => {
+    setShowAnswer(false);
+    setSelectedAnswer('');
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      router.push('/categories');
+      alert(`Gata. Ai terminat chestionarul. Felicitări! Scorul tău este: ${score}/${questions.length}`);
+      router.push('/');
     }
   };
-
-  const submitAnswer = (answer) => {
-    console.log("Selected answer:", answer);
-  };
-
-  const handleAnswerSelection = (answer) => {
-    setSelectedAnswer(answer);
-  };
-
-  if (!quizId) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className={styles.container}>
@@ -53,45 +45,43 @@ export default function QuizPage({ quizId, initialQuestions }) {
         <meta name="description" content="Chestionar GT" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div
-        className={styles.page}
-      >
+      <div className={styles.page}>
         <main className={styles.main}>
           <div>
             <h1>Chestionar {quizId}</h1>
-      {quiz.questions.length > 0 && (
-        <Question
-          question={quiz.questions[currentQuestionIndex]}
-          selectedAnswer={selectedAnswer}
-          onAnswerSelection={handleAnswerSelection}
-        />
-      )}
-      <hr className={styles.primary} />
-            <p>Punctaj: <strong>{score}</strong> din {quiz.questions.length - 1} puncte posibile.</p>
+            <p>{currentQuestion.question}</p>
+            <div>
+              {currentQuestion.options.map((option, index) => (
+                <div key={index} className={styles.option}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="answer"
+                      value={option}
+                      checked={selectedAnswer === option}
+                      onChange={() => handleOptionClick(option)}
+                    />
+                    {option}
+                  </label>
+                </div>
+              ))}
+            </div>
             <div className={styles.ctas}>
-              <button onClick={handleNextQuestion} className={styles.primary}>Înainte →</button>
+              {showAnswer && (
+                <div>
+                  <hr className={styles.primary} />
+                  <p>
+                    {selectedAnswer === currentQuestion.correctAnswer
+                      ? 'Răspuns corect!'
+                      : `Răspuns greșit! Răspunsul corect este: ${currentQuestion.correctAnswer}`}
+                  </p>
+                  <button onClick={handleNextQuestion} className={styles.primary}>Înainte →</button>
+                </div>
+              )}
             </div>
           </div>
         </main>
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { quizId } = context.params;
-
-  // Fetch questions from local storage or a database
-  let initialQuestions = [];
-  if (typeof window !== 'undefined' && window.localStorage) {
-    const storedQuestions = JSON.parse(localStorage.getItem('questions')) || [];
-    initialQuestions = storedQuestions.filter(question => question.category === quizId);
-  }
-
-  return {
-    props: {
-      quizId,
-      initialQuestions,
-    },
-  };
 }
