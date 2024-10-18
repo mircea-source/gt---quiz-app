@@ -18,7 +18,6 @@ function Categories() {
       </Head>
       <div className={styles.page}>
         <main className={styles.main}>
-          <h1>Alege o categorie</h1>
           <div className={styles.footer}>
             {categories.map((category) => (
               <div className={styles.ctas} key={category}>

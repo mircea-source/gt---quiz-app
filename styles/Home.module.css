@@ -34,7 +34,8 @@
   grid-row-start: 2;
 }
 
-.main ol {
+.main ol,
+.main ul {
   font-family: var(--font-geist-mono);
   padding-left: 0;
   margin: 0;

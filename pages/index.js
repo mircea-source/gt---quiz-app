@@ -35,28 +35,29 @@ export default function Home() {
       <div className={styles.page}>
         <main className={styles.main}>
           <h1>Chestionar cunoștințe generale</h1>
-          <p className="category">
-            Întrebările sunt grupate pe {categories.length} categorii:&nbsp;
-            {categories.map((category, index) => (
-              <span key={index}>
-                <Link href={`/quiz/${category}`}>{category}</Link>
-                {index < categories.length - 1 && ', '}
-              </span>
-            ))}
-          </p>
-          <p>Există doar o singură variantă corectă de răspuns pentru fiecare întrebare.
-            <br/>Se poate adăuga o întrebare suplimentară, care va fi afișată după încheierea chestionarului.</p>
-          <p>Alege o categorie sau începe chestionarul apăsând butonul Start.</p>
+          <ul>
+            <li>
+              Întrebările sunt grupate pe {categories.length} categorii:&nbsp;
+              {categories.map((category, index) => (
+                <span key={index}>
+                  <Link href={`/quiz/${category}`}>{category}</Link>
+                  {index < categories.length - 1 && ', '}
+                </span>
+              ))}
+            </li>
+            <li>Există doar o singură variantă corectă de răspuns pentru fiecare întrebare.</li>
+            <li>Se poate adăuga o întrebare suplimentară apăsând butonul Start.</li>
+          </ul>
           <div className={styles.ctas}>
             <Link href="/categories" className={styles.primary}>Start</Link>
           </div>
         </main>
         <footer className={styles.footer}>
-        {categories.map((category, index) => (
-              <span key={index}>
-                <Link href={`/quiz/${category}`}>{category}</Link>
-              </span>
-            ))}
+          {categories.map((category, index) => (
+            <span key={index}>
+              <Link href={`/quiz/${category}`}>{category}</Link>
+            </span>
+          ))}
         </footer>
       </div>
     </>
