@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import questionsData from '../public/questions.json'; // Adjust the path as necessary
+import questionsData from '../public/questions.json';
 import styles from '../styles/Category.module.css';
 
 function AddQuestionForm({ categories, onQuestionAdded }) {
